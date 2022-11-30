@@ -28,6 +28,14 @@ GROUP BY film_id, store_id
 ORDER BY movie_count DESC, film_id ASC, store_id ASC;
 -- could technically do limit 1 but that would exclude ties
 -- tried a few methods found online to get max of a count but none worked, WIP
+-- this will get that max value of 4 but need to implement this into a where somehow
+SELECT max(movie_count)
+FROM (
+	SELECT film_id, store_id, count(film_id) AS movie_count
+	FROM inventory
+	GROUP BY film_id, store_id
+) AS sub;
+
 
 --4. How many customers have the last name ‘William’?
 SELECT count(last_name)
@@ -41,6 +49,13 @@ GROUP BY staff_id
 ORDER BY rental_sold DESC
 -- could technically do limit 1 but that would exclude ties
 -- tried a few methods found online to get max of a count but none worked, WIP
+-- this will get that max value of 8040 but need to implement this into a where somehow
+SELECT max(rental_sold)
+FROM (
+	SELECT staff_id, count(staff_id) AS rental_sold
+	FROM rental
+	GROUP BY staff_id
+) AS sub;
 
 --6. How many different district names are there?
 SELECT count(DISTINCT district)
@@ -53,6 +68,13 @@ GROUP BY film_id
 ORDER BY actor_count DESC, film_id ASC;
 -- could technically do limit 1 but that would exclude ties
 -- tried a few methods found online to get max of a count but none worked, WIP
+-- this will get that max value of 15 but need to implement this into a where somehow
+SELECT max(actor_count)
+FROM (
+	SELECT film_id, count(actor_id) AS actor_count
+	FROM film_actor
+	GROUP BY film_id
+) AS sub
 
 --8. From store_id 1, how many customers have a last name ending with ‘es’?
 --(use customer table)
@@ -69,6 +91,16 @@ GROUP BY amount
 HAVING count(amount) > 250
 ORDER BY amount asc;
 -- need to figure out getting a count of a count
+-- from brendan
+SELECT COUNT(*)
+FROM (
+	SELECT amount, COUNT(amount) 
+	FROM payment
+	WHERE customer_id BETWEEN 380 AND 430
+	GROUP BY amount
+	HAVING COUNT(amount) > 250) AS sub
+
+
 
 --10. Within the film table, how many rating categories are there? And what rating has
 --the most movies total?
@@ -78,3 +110,10 @@ GROUP BY rating
 ORDER BY movie_count DESC;
 -- could technically do limit 1 but that would exclude ties
 -- tried a few methods found online to get max of a count but none worked, WIP
+-- this will get that max value of 223 but need to implement this into a where somehow
+SELECT max(movie_count)
+FROM (
+	SELECT rating, count(rating) AS movie_count
+	FROM film
+	GROUP BY rating
+) AS sub
